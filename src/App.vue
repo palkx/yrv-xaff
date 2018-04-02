@@ -1,0 +1,37 @@
+<template>
+  <div id="app">
+    <YoutubeRV/>
+  </div>
+</template>
+
+<script>
+import YoutubeRV from './components/YoutubeRV'
+
+export default {
+  name: 'App',
+  components: {
+    YoutubeRV
+  }
+}
+</script>
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-weight: 400;
+}
+
+html, body, #app {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+}
+
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+</style>
