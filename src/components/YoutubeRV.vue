@@ -12,7 +12,9 @@ export default {
       video: null,
       videoID: null,
       playerVars: {
-        autoplay: 1,
+        start: 0,
+        end: null,
+        autoplay: 0,
         cc_load_policy: 0,
         color: 'white',
         controls: 0,
@@ -21,9 +23,7 @@ export default {
         iv_load_policy: 3,
         modestbranding: 1,
         rel: 0,
-        showinfo: 0,
-        start: 0,
-        end: null
+        showinfo: 0
       }
     }
   },
@@ -39,13 +39,17 @@ export default {
     ended () {
       this.loadVideo()
     },
-    loadVideo () {
+    async loadVideo () {
       this.$http.get(this.apiEndpoint + '/yrvs/random').then((data, err) => {
         if (!err) {
           this.video = data.body
-          this.videoID = this.video.videoId
           this.playerVars.start = this.video.start
           this.playerVars.end = this.video.end
+          this.videoID = this.video.videoId
+        }
+      }).then(err => {
+        if (!err) {
+          this.player.loadVideoById({ videoId: this.videoID, startSeconds: this.playerVars.start, endSeconds: this.playerVars.end })
         }
       })
     }
