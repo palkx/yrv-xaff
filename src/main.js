@@ -10,8 +10,7 @@ Vue.use(Resource)
 
 Vue.config.productionTip = false
 
-// Vue.prototype.apiEndpoint = 'https://api.xaff.ru'
-Vue.prototype.apiEndpoint = 'http://localhost:3000'
+Vue.prototype.apiEndpoint = 'https://api.xaff.ru'
 
 /* eslint-disable no-new */
 new Vue({
