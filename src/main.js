@@ -22,11 +22,9 @@ new Vue({
 /*
   FIXME:
   TODO:
-  Add skip button
-  Add progressbar
+  Hide interface when mouse not moving
   Add like/dislike buttons
   Add report button
-  Handle youtube error state
   Add get parameters to applications
     Video id
   Add user settings (save in localStorage)
