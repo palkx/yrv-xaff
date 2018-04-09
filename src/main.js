@@ -10,7 +10,8 @@ Vue.use(Resource)
 
 Vue.config.productionTip = false
 
-Vue.prototype.apiEndpoint = 'https://api.xaff.ru'
+// Vue.prototype.apiEndpoint = 'https://api.xaff.ru'
+Vue.prototype.apiEndpoint = 'http://localhost:3000'
 
 /* eslint-disable no-new */
 new Vue({
@@ -18,3 +19,18 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+/*
+  TODO:
+  Add skip button
+  Add progressbar
+  Add like/dislike buttons
+  Add report button
+  Handle youtube error state
+  Add get parameters to applications
+    Video id
+  Add user settings (save in localStorage)
+    Preferred quality
+    Preferred player settings
+    Preferred interface settings
+*/
