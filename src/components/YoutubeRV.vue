@@ -136,8 +136,8 @@ export default {
   opacity: 0;
   z-index: 100;
   height: 40px;
-  width: 180px;
-  background-color: white;
+  width: 160px;
+  background-color: rgba(0,0,0,0);
   position: fixed;
   border-radius: 4px;
   right: 0px;
