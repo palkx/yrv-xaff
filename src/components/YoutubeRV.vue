@@ -40,13 +40,17 @@ export default {
   },
   methods: {
     playing () {
-      this.durationTimer = setInterval(this.videoTime, 1000)
+      if (!this.durationTimer) {
+        this.durationTimer = setInterval(this.videoTime, 1000)
+      }
     },
     paused () {
       clearInterval(this.durationTimer)
+      this.durationTimer = null
     },
     ended () {
       clearInterval(this.durationTimer)
+      this.durationTimer = null
       this.loadVideo()
     },
     ready () {

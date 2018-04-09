@@ -20,6 +20,7 @@ new Vue({
 })
 
 /*
+  FIXME:
   TODO:
   Add skip button
   Add progressbar
