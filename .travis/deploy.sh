@@ -1,9 +1,6 @@
 #!/bin/bash
 
 eval "$(ssh-agent -s)" # Start ssh-agent cache
-pwd # Echo current directory for testing purposes
-ls -al # Directory structure for testing purposes
-ls -al .travis
 chmod 600 .travis/id_rsa # Allow read access to the private key
 ssh-add .travis/id_rsa # Add the private key to SSH
 
