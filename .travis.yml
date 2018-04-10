@@ -7,6 +7,8 @@ cache:
   directories:
   - node_modules
 addons:
+  ssh-known-hosts:
+    secure: "EJxUFkUxURsIgXn0xcJnn3HZ8mgEZZDdJP9Y67SVcBguUHI/xyVv13PzgX6baWJFNrLtEqnjT2hhpgqHfwx1SSY3n8bYUwq/wRN8AcCGgCCi/vdyrcL5ZjHehlaQH5KhOw0e2bkko7Ce+7/OVzDYqx0PVmZoIJ+Q2R+mPybKgx5tCQ4ZP7U3Xa4kIsoiAy9Lnyd/a+HLKRqJw5Tnsl3wU+Dku3RhiWDE1/XcUfhWB+Lzf6+RV9u8CINRt8qmfY20SotNFsUsOMVpznkjvBDcif1Wk2He2FXk8cwQLbQ89NCYKlVogDxSSoy0sDhRthTDii4+HJ024EykW1IPg8/LdvnjJqaULYhsE4iVvcygpKSfEudrijnHv8vQRmMlrBR6dN053pJ2jfabBhBbfohfIu14ZmSUFQ0wJ1ZYkn6OjkmR8QTxsT6pKICm16uY0BL6HHoI6yz8KNxdv4U4c75KpWjgTCwLufA5ym1zuIdEHveivmTfxKDPIIffdO7iY84y6jMvBQNuDVu9XRAJyW4fnGVqgEe58HQsr6kzpXNXlsG86q5aJOF/+DPijPhsFpjXKS3Bg8NyvpG5CEYKVF/Olv3WVjgO6RaL0TxUVWPL0BvPVgWWRXh7Ex0G9X0AVOSXV0midnKR4Dpb7nwGv/7eEc1BFI6Tsf9XGYcrRL6+kyM="
   apt:
     sources:
     - git-core
