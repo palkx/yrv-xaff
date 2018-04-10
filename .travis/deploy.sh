@@ -3,8 +3,8 @@
 eval "$(ssh-agent -s)" # Start ssh-agent cache
 pwd # Echo current directory for testing purposes
 ls -l # Directory structure for testing purposes
-chmod 600 ./.travis/id_rsa # Allow read access to the private key
-ssh-add ./.travis/id_rsa # Add the private key to SSH
+chmod 600 .travis/id_rsa # Allow read access to the private key
+ssh-add .travis/id_rsa # Add the private key to SSH
 
 git config --global push.default matching
 git remote add deploy ssh://git@$IP:$PORT$TEMP_DEPLOY_DIR
