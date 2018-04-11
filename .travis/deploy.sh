@@ -9,6 +9,8 @@ ssh deploy@$IP -p $PORT <<EOF
   rm -rf $TEMP_DEPLOY_DIR
   mkdir $TEMP_DEPLOY_DIR
   cd $TEMP_DEPLOY_DIR
+  eval "$(ssh-agent -s)"
+  ssh-add ~/.ssh/id_rsa
   git clone -b production git@github.com:iSm1le/yrv-xaff.git .
   npm install
   npm run build
