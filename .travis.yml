@@ -28,5 +28,5 @@ jobs:
 stages:
 - test
 - name: deploy
-  if: branch = production
+  if: (branch = production) AND (type != pull_request)
 script: skip
