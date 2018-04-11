@@ -1,6 +1,12 @@
-# yrv
+# Yotube RV
 
-> Youtube Random Video
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/iSm1le/yrv-xaff/master/LICENSE)
+master:
+[![Build Status](https://travis-ci.org/iSm1le/yrv-xaff.svg?branch=master)](https://travis-ci.org/iSm1le/yrv-xaff)
+[![dependencies Status](https://david-dm.org/iSm1le/yrv-xaff/status.svg)](https://david-dm.org/iSm1le/yrv-xaff)
+production:
+[![Build Status](https://travis-ci.org/iSm1le/yrv-xaff.svg?branch=production)](https://travis-ci.org/iSm1le/yrv-xaff)
+[![dependencies Status](https://david-dm.org/iSm1le/yrv-xaff/status.svg?branch=production)](https://david-dm.org/iSm1le/yrv-xaff)
 
 ## Build Setup
 
@@ -18,4 +24,4 @@ npm run build
 npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+> Created and maintained by [iSm1le](https://github.com/iSm1le)
