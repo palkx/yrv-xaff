@@ -9,9 +9,9 @@ ssh deploy@$IP -p $PORT <<EOF
   rm -rf $TEMP_DEPLOY_DIR
   mkdir $TEMP_DEPLOY_DIR
   cd $TEMP_DEPLOY_DIR
-  git clone git@github.com:iSm1le/yrv-xaff.git .
+  git clone -b production git@github.com:iSm1le/yrv-xaff.git .
   npm install
   npm run build
   rm -rf $DEPLOY_DIR/*
-  cp dist/* $DEPLOY_DIR/
+  cp -R dist/* $DEPLOY_DIR/
 EOF
