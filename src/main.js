@@ -22,9 +22,7 @@ new Vue({
 /*
   FIXME:
   TODO:
-  Prepare to move to github
   Hide interface when mouse not moving
-  Show next video in controls
   Add like/dislike buttons
   Add report button
   Add get parameters to applications

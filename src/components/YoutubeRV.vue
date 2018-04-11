@@ -2,7 +2,8 @@
   <div class="video">
     <youtube ref="youtube" width="100%" height="100%" :player-vars="current.videoSettings" @ready="ready()"  @playing="playing()" @paused="paused()" @buffering="buffering()" @error="error()" @ended="ended()" />
     <div class="controls">
-      <button class="btn" @click="loadNext()">Skip >></button>
+      <div class="nextVideo" :title="next.video.friendlyName"><span :class="nextLoaded ? 'show' : 'hide'">Next: {{ next.video.friendlyName }}</span></div>
+      <button class="btn" @click="loadNext()" :disabled="current.loadingNext">Skip >></button>
     </div>
     <div id="progress">
       <div class="progress-bar" id="current" :style="{ width: current.currentTimePercent + '%', 'background-color': current.currentProgressBarBackgroundColor }"></div>
@@ -27,6 +28,7 @@ export default {
         bufferedPercent: 0,
         currentProgressBarBackgroundColor: 'white',
         duration: 0,
+        loadingNext: false,
         videoSettings: {
           start: 0,
           end: null,
@@ -69,10 +71,7 @@ export default {
     },
     async error () {
       console.log('ERROR')
-      await this.preloadVideo()
-      clearInterval(this.durationTimer)
-      this.durationTimer = null
-      this.loadVideo()
+      await this.loadNext()
     },
     ended () {
       clearInterval(this.durationTimer)
@@ -100,10 +99,14 @@ export default {
       }
     },
     async loadNext () {
-      await this.preloadVideo()
+      this.current.loadingNext = true
+      if (!this.nextLoaded) {
+        await this.preloadVideo()
+      }
       clearInterval(this.durationTimer)
       this.durationTimer = null
       await this.loadVideo()
+      this.current.loadingNext = false
     },
     async videoTime () {
       if (this.current.duration === 0) {
@@ -132,24 +135,36 @@ export default {
 </script>
 
 <style scoped>
+span.show {
+  opacity: 1;
+}
+span.hide {
+  opacity: 0;
+}
 .controls {
   opacity: 0;
   z-index: 100;
-  height: 40px;
-  width: 160px;
+  height: 60px;
+  width: 300px;
   background-color: rgba(0,0,0,0);
   position: fixed;
   border-radius: 4px;
   right: 0px;
-  bottom: 6px;
+  bottom: 7px;
   -webkit-transition: opacity 1s linear 3s;
   transition: opacity 1s linear 3s;
 }
 .controls .btn {
-  align-content: center;
-  width: 80%;
-  margin: 2.5%;
-  height: 80%;
+  width: 140px;
+  margin: 4px 0 0 140px;
+  height: 30px;
+}
+.controls .nextVideo {
+  text-overflow: clip;
+  white-space: nowrap;
+  overflow: hidden;
+  color: white;
+  margin: auto 6px auto auto;
 }
 .btn {
   color: #ffffff;
