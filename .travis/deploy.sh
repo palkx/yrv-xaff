@@ -10,8 +10,8 @@ ssh deploy@$IP -p $PORT <<EOF
   mkdir $TEMP_DEPLOY_DIR
   cd $TEMP_DEPLOY_DIR
   git clone -b production https://github.com/iSm1le/yrv-xaff.git .
-  npm install
-  npm run build
+  yarn
+  yarn run build
   rm -rf $DEPLOY_DIR/*
   cp -R dist/* $DEPLOY_DIR/
 EOF
