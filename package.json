@@ -24,6 +24,7 @@
   "dependencies": {
     "vue": "^2.5.16",
     "vue-resource": "^1.5.0",
+    "vue-router": "^3.0.1",
     "vue-youtube": "^1.2.5",
     "webpack-cli": "^2.0.14"
   },
@@ -63,7 +64,6 @@
     "postcss-url": "^7.3.2",
     "rimraf": "^2.6.2",
     "semver": "^5.5.0",
-    "shelljs": "^0.8.1",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "url-loader": "^1.0.1",
     "vue-loader": "^14.2.2",

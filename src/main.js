@@ -2,11 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import VueYoutube from 'vue-youtube'
-import Resource from 'vue-resource'
-
-Vue.use(VueYoutube)
-Vue.use(Resource)
+import router from './router'
 
 Vue.config.productionTip = false
 
@@ -15,6 +11,7 @@ Vue.prototype.apiEndpoint = 'https://api.xaff.ru'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  router,
   components: { App },
   template: '<App/>'
 })

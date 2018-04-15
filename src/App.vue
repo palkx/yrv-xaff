@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <YoutubeRV/>
+    <router-view/>
   </div>
 </template>
 
