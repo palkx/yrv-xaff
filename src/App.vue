@@ -1,18 +1,18 @@
 <template>
   <div id="app">
-    <YoutubeRV/>
+    <router-view/>
   </div>
 </template>
 
 <script>
-import YoutubeRV from './components/YoutubeRV'
+import YoutubeRV from './components/YoutubeRV';
 
 export default {
   name: 'App',
   components: {
     YoutubeRV
   }
-}
+};
 </script>
 
 <style>

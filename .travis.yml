@@ -17,9 +17,6 @@ addons:
     secure: "Iy07BALZmJA1BIE89v5lGdUoVBKvqLm9K7fy3czkj3TNC2eM2nj8bGiCBdW2JmdFmgU1YXJ5BAKiQVDADStAd4VZ/+m5ieQgKMSIkCRqMrVCjUrtDaKQ1scXDMy75BWMSqofHdAwCiWO8XvcbbOP859+61DWZOMhzWFbgWcEUoVm2yiHo/pYn18n+h5yrMBstPT3wWz6EF8IcskVJfp/smwO4iljzCzJEYJWDBpCbsCiyEt7SxXEEE6VRTY4wo8WN835unQzyOkjDK3OuCysoy1A9I6ln+yPicwElNRV5898etIb2+MHQYHkxFg6kv6uKmh+7z6ynIyNCHt1+m/AWhzizsWLOCkx3eig3m7Whky1fhOQAQ6Emqv9ZcxnRozYjJBYiSUsjm6Iv54JoZny7XxLN4syV48ICCR5B6n7oM8ut1dKIE4lYJbM3TO/35ZvdJZTbdCeK4iS0CgAMUDAPCRxRfAR6o1PSxGxTW8qTM2ShXHdhAyGVvGyInsrMGWonXKyR3GQrWEQwpC8h6ciqtIH6oUNM1IEfr0CmRinYV14fXxkBdmJI0fIEQdPvGq1Ka2Rp3EZ0uTlYgLJNZOU+XSOBUmzrr8XAecGQXS4E4L7czYAr4n16a4YhyLqdNZr8ITDeSOdk2+spkv/6XI/T5mfcmM4I+wHNvTggN+P0Aw="
 before_install:
   - openssl aes-256-cbc -K $encrypted_c3355765ee6c_key -iv $encrypted_c3355765ee6c_iv -in .travis/id_rsa.enc -out .travis/id_rsa -d
-  - sudo apt-get update
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.5.1
-  - export PATH=$HOME/.yarn/bin:$PATH
 install: skip
 jobs:
   include:
