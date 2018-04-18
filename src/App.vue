@@ -5,14 +5,14 @@
 </template>
 
 <script>
-import YoutubeRV from './components/YoutubeRV'
+import YoutubeRV from './components/YoutubeRV';
 
 export default {
   name: 'App',
   components: {
     YoutubeRV
   }
-}
+};
 </script>
 
 <style>

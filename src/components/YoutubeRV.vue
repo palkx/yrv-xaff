@@ -1,14 +1,37 @@
 <template>
   <div class="video">
-    <youtube ref="youtube" width="100%" height="100%" :player-vars="current.videoSettings" @ready="ready()"  @playing="playing()" @paused="paused()" @buffering="buffering()" @error="error()" @ended="ended()" />
+    <youtube
+      ref="youtube"
+      width="100%"
+      height="100%"
+      :player-vars="current.videoSettings"
+      @ready="ready()"
+      @playing="playing()"
+      @paused="paused()"
+      @buffering="buffering()"
+      @error="error()"
+      @ended="ended()" />
     <div class="controls">
-      <div class="nextVideo" :title="next.video.friendlyName"><span :class="nextLoaded ? 'show' : 'hide'">Next: {{ next.video.friendlyName }}</span></div>
-      <button class="btn" @click="loadNext()" :disabled="current.loadingNext">Skip >></button>
+      <div
+        class="nextVideo"
+        :title="next.video.friendlyName"><span :class="nextLoaded ? 'show' : 'hide'">Next: {{ next.video.friendlyName }}</span></div>
+      <button
+        class="btn"
+        @click="loadNext()"
+        :disabled="current.loadingNext">Skip >></button>
     </div>
     <div id="progress">
-      <div class="progress-bar" id="current" :style="{ width: current.currentTimePercent + '%', 'background-color': current.currentProgressBarBackgroundColor }"></div>
-      <div class="progress-bar" id="buffered" :style="{ width: current.bufferedPercent + '%' }"></div>
-      <div class="progress-bar" id="background"></div>
+      <div
+        class="progress-bar"
+        id="current"
+        :style="{ width: current.currentTimePercent + '%', 'background-color': current.currentProgressBarBackgroundColor }"/>
+      <div
+        class="progress-bar"
+        id="buffered"
+        :style="{ width: current.bufferedPercent + '%' }"/>
+      <div
+        class="progress-bar"
+        id="background"/>
     </div>
   </div>
 </template>
@@ -16,7 +39,7 @@
 <script>
 export default {
   name: 'YoutubeRV',
-  data () {
+  data() {
     return {
       current: {
         video: '',
@@ -33,12 +56,12 @@ export default {
           start: 0,
           end: null,
           autoplay: 1,
-          cc_load_policy: 0,
+          cc_load_policy: 0, // eslint-disable-line camelcase
           color: 'white',
           controls: 0,
           disablekb: 0,
           fs: 0,
-          iv_load_policy: 3,
+          iv_load_policy: 3, // eslint-disable-line camelcase
           modestbranding: 1,
           rel: 0,
           showinfo: 0
@@ -48,67 +71,67 @@ export default {
         video: ''
       },
       nextLoaded: false
-    }
+    };
   },
   methods: {
-    ready () {
-      this.current.player = this.$refs.youtube.player
-      this.loadVideo()
+    async ready() {
+      this.current.player = this.$refs.youtube.player;
+      await this.loadVideo();
     },
-    playing () {
+    playing() {
       if (!this.durationTimer) {
-        this.durationTimer = setInterval(this.videoTime, 1000)
+        this.durationTimer = setInterval(this.videoTime, 1000);
       }
-      this.current.currentProgressBarBackgroundColor = 'white'
+      this.current.currentProgressBarBackgroundColor = 'white';
     },
-    paused () {
-      clearInterval(this.durationTimer)
-      this.durationTimer = null
-      this.current.currentProgressBarBackgroundColor = 'yellow'
+    paused() {
+      clearInterval(this.durationTimer);
+      this.durationTimer = null;
+      this.current.currentProgressBarBackgroundColor = 'yellow';
     },
-    buffering () {
-      this.current.currentProgressBarBackgroundColor = 'yellow'
+    buffering() {
+      this.current.currentProgressBarBackgroundColor = 'yellow';
     },
-    async error () {
-      console.log('ERROR')
-      await this.loadNext()
+    async error() {
+      console.log('ERROR');
+      await this.loadNext();
     },
-    ended () {
-      clearInterval(this.durationTimer)
-      this.durationTimer = null
-      this.loadVideo()
+    async ended() {
+      clearInterval(this.durationTimer);
+      this.durationTimer = null;
+      await this.loadVideo();
     },
-    async loadVideo () {
-      this.current.video = this.next.video
-      this.current.videoId = this.current.video.videoId
-      this.current.videoSettings.start = this.current.video.start
-      this.current.videoSettings.end = this.current.video.end
-      this.current.duration = 0
-      this.current.player.loadVideoById({
-        'videoId': this.current.videoId,
-        'startSeconds': this.current.video.start,
-        'endSeconds': this.current.video.end
-      })
-      this.nextLoaded = false
+    async loadVideo() {
+      this.current.video = this.next.video;
+      this.current.videoId = this.current.video.videoId;
+      this.current.videoSettings.start = this.current.video.start;
+      this.current.videoSettings.end = this.current.video.end;
+      this.current.duration = 0;
+      await this.current.player.loadVideoById({
+        videoId: this.current.videoId,
+        startSeconds: this.current.video.start,
+        endSeconds: this.current.video.end
+      });
+      this.nextLoaded = false;
     },
-    async preloadVideo () {
-      const video = await this.$http.get(this.apiEndpoint + '/yrvs/random')
-      this.next.video = video.body
+    async preloadVideo() {
+      const video = await this.$http.get(`${this.apiEndpoint}/yrvs/random`);
+      this.next.video = video.body;
       if (!this.nextLoaded) {
-        this.nextLoaded = true
+        this.nextLoaded = true;
       }
     },
-    async loadNext () {
-      this.current.loadingNext = true
+    async loadNext() {
+      this.current.loadingNext = true;
       if (!this.nextLoaded) {
-        await this.preloadVideo()
+        await this.preloadVideo();
       }
-      clearInterval(this.durationTimer)
-      this.durationTimer = null
-      await this.loadVideo()
-      this.current.loadingNext = false
+      clearInterval(this.durationTimer);
+      this.durationTimer = null;
+      await this.loadVideo();
+      this.current.loadingNext = false;
     },
-    async videoTime () {
+    async videoTime() {
       if (this.current.duration === 0) {
         this.current.duration = this.current.videoSettings.end > 0
           ? this.current.videoSettings.start > 0
@@ -116,22 +139,22 @@ export default {
             : this.current.videoSettings.end
           : this.current.videoSettings.start > 0
             ? Math.floor(await this.current.player.getDuration()) - this.current.videoSettings.start
-            : Math.floor(await this.current.player.getDuration())
+            : Math.floor(await this.current.player.getDuration());
       }
       this.current.currentTime = this.current.videoSettings.start > 0
         ? Math.floor(await this.current.player.getCurrentTime() + 1) - this.current.videoSettings.start
-        : Math.floor(await this.current.player.getCurrentTime())
-      this.current.currentTimePercent = (this.current.currentTime / this.current.duration) * 100
-      this.current.bufferedPercent = (await this.current.player.getVideoLoadedFraction()) * 100
+        : Math.floor(await this.current.player.getCurrentTime());
+      this.current.currentTimePercent = (this.current.currentTime / this.current.duration) * 100;
+      this.current.bufferedPercent = await this.current.player.getVideoLoadedFraction() * 100;
       if ((Math.floor(this.current.currentTimePercent) > 80) && !this.nextLoaded) {
-        this.preloadVideo()
+        this.preloadVideo();
       }
     }
   },
-  created () {
-    this.preloadVideo()
+  created() {
+    this.preloadVideo();
   }
-}
+};
 </script>
 
 <style scoped>
