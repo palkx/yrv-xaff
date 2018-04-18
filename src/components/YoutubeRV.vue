@@ -14,11 +14,14 @@
     <div class="controls">
       <div
         class="nextVideo"
-        :title="next.video.friendlyName"><span :class="nextLoaded ? 'show' : 'hide'">Next: {{ next.video.friendlyName }}</span></div>
+        :title="next.video.friendlyName">
+        <span :class="nextLoaded ? 'show' : 'hide'">Next: {{ next.video.friendlyName }}</span>
+      </div>
       <button
         class="btn"
         @click="loadNext()"
-        :disabled="current.loadingNext">Skip >></button>
+        :disabled="current.loadingNext">Skip >>
+      </button>
     </div>
     <div id="progress">
       <div
@@ -115,7 +118,7 @@ export default {
       this.nextLoaded = false;
     },
     async preloadVideo() {
-      const video = await this.$http.get(`${this.apiEndpoint}/yrvs/random`);
+      const video = await this.$http.get(`${this.apiEndpoint}/yrvs/random?disabled=1`);
       this.next.video = video.body;
       if (!this.nextLoaded) {
         this.nextLoaded = true;
