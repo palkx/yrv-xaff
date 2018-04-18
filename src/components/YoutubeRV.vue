@@ -118,7 +118,7 @@ export default {
       this.nextLoaded = false;
     },
     async preloadVideo() {
-      const video = await this.$http.get(`${this.apiEndpoint}/yrvs/random?disabled=1`);
+      const video = await this.$http.get(`${this.apiEndpoint}/yrvs/random`);
       this.next.video = video.body;
       if (!this.nextLoaded) {
         this.nextLoaded = true;
