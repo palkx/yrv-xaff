@@ -124,6 +124,9 @@ export default {
         this.nextLoaded = true;
       }
     },
+    async videoViewed(_id) {
+      await this.$http.get(`${this.apiEndpoint}/yrvs/id/${_id}/viewed`);
+    },
     async loadNext() {
       this.current.loadingNext = true;
       if (!this.nextLoaded) {
@@ -150,7 +153,8 @@ export default {
       this.current.currentTimePercent = (this.current.currentTime / this.current.duration) * 100;
       this.current.bufferedPercent = await this.current.player.getVideoLoadedFraction() * 100;
       if ((Math.floor(this.current.currentTimePercent) > 80) && !this.nextLoaded) {
-        this.preloadVideo();
+        await this.preloadVideo();
+        await this.videoViewed(this.current.video._id);
       }
     }
   },
