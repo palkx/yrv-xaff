@@ -210,7 +210,7 @@ export default {
         : Math.floor(await this.current.player.getCurrentTime());
       this.current.currentTimePercent = (this.current.currentTime / this.current.duration) * 100;
       this.current.bufferedPercent = await this.current.player.getVideoLoadedFraction() * 100;
-      if ((Math.floor(this.current.currentTimePercent) > 5) && !this.nextLoaded && !this.customVideo) {
+      if ((Math.floor(this.current.currentTimePercent) > 5) && !this.nextLoaded) {
         this.preloadVideo();
       }
       if ((Math.floor(this.current.currentTimePercent) > 80) && !this.current.viewed && !this.customVideo) {
