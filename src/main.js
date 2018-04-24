@@ -22,8 +22,6 @@ new Vue({
   Hide interface when mouse not moving
   Add like/dislike buttons
   Add report button
-  Add get parameters to applications
-    Video id
   Add user settings (save in localStorage)
     Preferred quality
     Preferred player settings

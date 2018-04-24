@@ -1,41 +1,77 @@
 <template>
-  <div class="video">
-    <youtube
-      ref="youtube"
-      width="100%"
-      height="100%"
-      :player-vars="current.videoSettings"
-      @ready="ready()"
-      @playing="playing()"
-      @paused="paused()"
-      @buffering="buffering()"
-      @error="error()"
-      @ended="ended()" />
-    <div class="controls">
-      <div
-        class="nextVideo"
-        :title="next.video.friendlyName">
-        <span :class="nextLoaded ? 'show' : 'hide'">Next: {{ next.video.friendlyName }}</span>
+  <div class="page-container md-layout-column">
+    <md-toolbar class="md-dense md-primary">
+      <md-button
+        class="md-icon-button"
+        @click="showNavigation = true">
+        <md-icon>menu</md-icon>
+      </md-button>
+      <span class="md-title">Youtube RV</span>
+      <span
+        v-if="nextLoaded"
+        class="md-title">{{ `Next: ${ next.video.friendlyName } in ${current.duration - current.currentTime}s` }}</span>
+      <div class="md-toolbar-section-end">
+        <md-button
+          class="md-icon-button"
+          @click="loadNext()"
+          :disabled="current.loadingNext">
+          <md-icon>refresh</md-icon>
+        </md-button>
       </div>
-      <button
-        class="btn"
-        @click="loadNext()"
-        :disabled="current.loadingNext">Skip >>
-      </button>
-    </div>
-    <div id="progress">
-      <div
-        class="progress-bar"
-        id="current"
-        :style="{ width: current.currentTimePercent + '%', 'background-color': current.currentProgressBarBackgroundColor }"/>
-      <div
-        class="progress-bar"
-        id="buffered"
-        :style="{ width: current.bufferedPercent + '%' }"/>
-      <div
-        class="progress-bar"
-        id="background"/>
-    </div>
+      <md-progress-bar
+        class="md-accent"
+        md-mode="buffer"
+        :md-value="current.currentTimePercent"
+        :md-buffer="current.bufferedPercent"/>
+    </md-toolbar>
+    <md-drawer
+      class=""
+      :md-active.sync="showNavigation">
+      <md-toolbar
+        class="md-transparent"
+        md-elevation="0">
+        <span class="md-title">Settings</span>
+      </md-toolbar>
+      <!--<md-list>
+        <md-list-item>
+          <md-icon>move_to_inbox</md-icon>
+          <span class="md-list-item-text">Inbox</span>
+        </md-list-item>
+        <md-list-item>
+          <md-icon>send</md-icon>
+          <span class="md-list-item-text">Sent Mail</span>
+        </md-list-item>
+        <md-list-item>
+          <md-icon>delete</md-icon>
+          <span class="md-list-item-text">Trash</span>
+        </md-list-item>
+        <md-list-item>
+          <md-icon>error</md-icon>
+          <span class="md-list-item-text">Spam</span>
+        </md-list-item>
+      </md-list>-->
+    </md-drawer>
+    <md-content>
+      <youtube
+        style="
+          position: absolute;
+          top: 0;
+          min-height: 100%;
+          min-width: 100%;
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          "
+        ref="youtube"
+        :player-vars="current.videoSettings"
+        @ready="ready()"
+        @playing="playing()"
+        @paused="paused()"
+        @buffering="buffering()"
+        @error="error()"
+        @ended="ended()" />
+    </md-content>
   </div>
 </template>
 
@@ -52,9 +88,9 @@ export default {
         currentTime: 0,
         currentTimePercent: 0,
         bufferedPercent: 0,
-        currentProgressBarBackgroundColor: 'white',
         duration: 0,
         loadingNext: false,
+        viewed: false,
         videoSettings: {
           start: 0,
           end: null,
@@ -73,8 +109,15 @@ export default {
       next: {
         video: ''
       },
-      nextLoaded: false
+      customVideo: false,
+      nextLoaded: false,
+      showNavigation: false
     };
+  },
+  computed: {
+    id() {
+      return this.$route.params.id;
+    }
   },
   methods: {
     async ready() {
@@ -85,31 +128,43 @@ export default {
       if (!this.durationTimer) {
         this.durationTimer = setInterval(this.videoTime, 1000);
       }
-      this.current.currentProgressBarBackgroundColor = 'white';
     },
     paused() {
       clearInterval(this.durationTimer);
       this.durationTimer = null;
-      this.current.currentProgressBarBackgroundColor = 'yellow';
     },
     buffering() {
-      this.current.currentProgressBarBackgroundColor = 'yellow';
+      return true;
     },
     async error() {
-      console.log('ERROR');
+      if (this.customVideo) {
+        this.customVideo = false;
+        this.$router.push('/');
+      }
       await this.loadNext();
     },
     async ended() {
+      if (this.customVideo) {
+        this.customVideo = false;
+        this.$router.push('/');
+      }
       clearInterval(this.durationTimer);
       this.durationTimer = null;
       await this.loadVideo();
     },
     async loadVideo() {
-      this.current.video = this.next.video;
-      this.current.videoId = this.current.video.videoId;
-      this.current.videoSettings.start = this.current.video.start;
-      this.current.videoSettings.end = this.current.video.end;
-      this.current.duration = 0;
+      if (this.customVideo) {
+        this.current.videoId = this.id;
+        this.current.videoSettings.start = 0;
+        this.current.videoSettings.end = 0;
+        this.current.duration = 0;
+      } else {
+        this.current.video = this.next.video;
+        this.current.videoId = this.current.video.videoId;
+        this.current.videoSettings.start = this.current.video.start;
+        this.current.videoSettings.end = this.current.video.end;
+        this.current.duration = 0;
+      }
       await this.current.player.loadVideoById({
         videoId: this.current.videoId,
         startSeconds: this.current.video.start,
@@ -120,14 +175,17 @@ export default {
     async preloadVideo() {
       const video = await this.$http.get(`${this.apiEndpoint}/yrvs/random`);
       this.next.video = video.body;
-      if (!this.nextLoaded) {
-        this.nextLoaded = true;
-      }
+      this.nextLoaded = true;
     },
     async videoViewed(_id) {
       await this.$http.get(`${this.apiEndpoint}/yrvs/id/${_id}/viewed`);
+      this.current.viewed = true;
     },
     async loadNext() {
+      if (this.customVideo) {
+        this.customVideo = false;
+        this.$router.push('/');
+      }
       this.current.loadingNext = true;
       if (!this.nextLoaded) {
         await this.preloadVideo();
@@ -152,103 +210,56 @@ export default {
         : Math.floor(await this.current.player.getCurrentTime());
       this.current.currentTimePercent = (this.current.currentTime / this.current.duration) * 100;
       this.current.bufferedPercent = await this.current.player.getVideoLoadedFraction() * 100;
-      if ((Math.floor(this.current.currentTimePercent) > 80) && !this.nextLoaded) {
-        await this.preloadVideo();
-        await this.videoViewed(this.current.video._id);
+      if ((Math.floor(this.current.currentTimePercent) > 5) && !this.nextLoaded && !this.customVideo) {
+        this.preloadVideo();
+      }
+      if ((Math.floor(this.current.currentTimePercent) > 80) && !this.current.viewed && !this.customVideo) {
+        this.videoViewed(this.current.video._id);
       }
     }
   },
   created() {
-    this.preloadVideo();
+    if (String(this.id).length === 11) {
+      this.customVideo = true;
+    } else {
+      this.preloadVideo();
+    }
   }
 };
 </script>
 
-<style scoped>
-span.show {
-  opacity: 1;
+<style lang="scss" scoped>
+.page-container:hover .md-toolbar {
+  transform: translateY(0%);
 }
-span.hide {
-  opacity: 0;
-}
-.controls {
-  opacity: 0;
-  z-index: 100;
-  height: 60px;
-  width: 300px;
-  background-color: rgba(0,0,0,0);
-  position: fixed;
-  border-radius: 4px;
-  right: 0px;
-  bottom: 7px;
-  -webkit-transition: opacity 1s linear 3s;
-  transition: opacity 1s linear 3s;
-}
-.controls .btn {
-  width: 140px;
-  margin: 4px 0 0 140px;
-  height: 30px;
-}
-.controls .nextVideo {
-  text-overflow: clip;
-  white-space: nowrap;
-  overflow: hidden;
-  color: white;
-  margin: auto 6px auto auto;
-}
-.btn {
-  color: #ffffff;
-  background-color: #2BBD1B;
-  border-color: #026921;
-  border-radius: 5px;
-}
-.btn:hover,
-.btn:focus,
-.btn:active {
-  color: #ffffff;
-  background-color: #247A3E;
-  border-color: #026921;
-}
-#progress {
-  opacity: 0;
-  z-index: 100;
-  width: 100%;
-  position: fixed;
-  height: 6px;
-  bottom: 0px;
-  border-top: 1px solid black;
-  background-color: rgba(0,0,0,0);
-  -webkit-transition: opacity 1s linear 3s;
-  transition: opacity 1s linear 3s;
-}
-.progress-bar {
-  position: fixed;
-  height: 100%;
-  max-width: 100%;
-  -webkit-transition: width 1.1s linear, opacity 2s linear, background-color .5s linear;
-  transition: width 1.1s linear, opacity 2s linear, background-color .5s linear;
-}
-.progress-bar#current {
-  background-color: rgb(255,255,255);
-  z-index: 103;
-}
-.progress-bar#buffered {
-  background-color: rgba(180,180,180,.6);
-  z-index: 102;
-}
-.progress-bar#background {
-  width: 100%;
-  background-color: rgba(255,255,255,.3);
-  z-index: 101;
-}
-.video {
+
+.page-container {
+  min-height: 100%;
   display: flex;
-  width: 100%;
-  height: 100%;
-}
-.video:hover #progress, .video:hover .controls {
-  opacity: 1;
-  -webkit-transition: opacity .3s linear;
-  transition: opacity .3s linear;
+  flex-direction: column;
+  overflow: hidden;
+  justify-content: center;
+  .md-toolbar {
+    transform: translateY(-100%);
+
+    .md-progress-bar {
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+    }
+  }
+  .md-drawer {
+    width: 230px;
+    max-width: calc(100vw - 125px);
+  }
+  .md-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: steelblue;
+  }
 }
 </style>
