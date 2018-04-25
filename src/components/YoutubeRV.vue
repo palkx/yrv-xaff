@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       current: {
-        video: '',
+        video: {},
         videoId: '',
         durationTimer: null,
         player: null,
@@ -155,9 +155,13 @@ export default {
     async loadVideo() {
       if (this.customVideo) {
         this.current.videoId = this.id;
-        this.current.videoSettings.start = 0;
-        this.current.videoSettings.end = 0;
+        console.log(this.$route.query.start);
+        this.current.videoSettings.start = this.$route.query.start ? Number(this.$route.query.start) : 0;
+        this.current.videoSettings.end = this.$route.query.end ? Number(this.$route.query.end) : 0;
+        this.current.video.start = this.current.videoSettings.start;
+        this.current.video.end = this.current.videoSettings.end;
         this.current.duration = 0;
+        console.log(this.current.videoSettings);
       } else {
         this.current.video = this.next.video;
         this.current.videoId = this.current.video.videoId;
@@ -210,7 +214,7 @@ export default {
         : Math.floor(await this.current.player.getCurrentTime());
       this.current.currentTimePercent = (this.current.currentTime / this.current.duration) * 100;
       this.current.bufferedPercent = await this.current.player.getVideoLoadedFraction() * 100;
-      if ((Math.floor(this.current.currentTimePercent) > 5) && !this.nextLoaded) {
+      if ((Math.floor(this.current.currentTimePercent) > 1) && !this.nextLoaded) {
         this.preloadVideo();
       }
       if ((Math.floor(this.current.currentTimePercent) > 80) && !this.current.viewed && !this.customVideo) {
