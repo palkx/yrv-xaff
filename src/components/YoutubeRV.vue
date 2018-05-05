@@ -9,7 +9,11 @@
       <span class="md-title">Youtube RV</span>
       <span
         v-if="nextLoaded"
-        class="md-title">{{ `Next: ${ next.video.friendlyName } in ${current.duration - current.currentTime}s` }}</span>
+        :title="`Next: ${ next.video.friendlyName } `"
+        class="md-title video-title">{{ `Next: ${ next.video.friendlyName }` }}</span>
+      <span
+        v-if="nextLoaded"
+        class="md-title video-time">{{ `in ${current.duration - current.currentTime}s` }}</span>
       <div class="md-toolbar-section-end">
         <md-button
           class="md-icon-button"
@@ -32,12 +36,15 @@
         md-elevation="0">
         <span class="md-title">Settings</span>
       </md-toolbar>
-      <!--<md-list>
+      <md-list>
         <md-list-item>
-          <md-icon>move_to_inbox</md-icon>
-          <span class="md-list-item-text">Inbox</span>
+          <md-icon class="volume">volume_mute</md-icon>
+          <input
+            type="range"
+            @change="updateVolume(userSettings.volume)"
+            v-model.number="userSettings.volume"> {{ userSettings.volume }}%
         </md-list-item>
-        <md-list-item>
+        <!--<md-list-item>
           <md-icon>send</md-icon>
           <span class="md-list-item-text">Sent Mail</span>
         </md-list-item>
@@ -48,8 +55,8 @@
         <md-list-item>
           <md-icon>error</md-icon>
           <span class="md-list-item-text">Spam</span>
-        </md-list-item>
-      </md-list>-->
+        </md-list-item>-->
+      </md-list>
     </md-drawer>
     <md-content>
       <youtube
@@ -76,6 +83,8 @@
 </template>
 
 <script>
+import settings from '../settings';
+
 export default {
   name: 'YoutubeRV',
   data() {
@@ -109,6 +118,7 @@ export default {
       next: {
         video: ''
       },
+      userSettings: {},
       customVideo: false,
       nextLoaded: false,
       showNavigation: false
@@ -123,6 +133,9 @@ export default {
     async ready() {
       this.current.player = this.$refs.youtube.player;
       await this.loadVideo();
+      if (this.userSettings.volume >= 0) {
+        this.current.player.setVolume(this.userSettings.volume);
+      }
     },
     playing() {
       if (!this.durationTimer) {
@@ -220,9 +233,14 @@ export default {
       if ((Math.floor(this.current.currentTimePercent) > 80) && !this.current.viewed && !this.customVideo) {
         this.videoViewed(this.current.video._id);
       }
+    },
+    updateVolume(vol) {
+      settings.setVolume(vol);
+      this.current.player.setVolume(vol);
     }
   },
   created() {
+    this.userSettings = settings.getSettings();
     if (String(this.id).length === 11) {
       this.customVideo = true;
     } else {
@@ -243,8 +261,23 @@ export default {
   flex-direction: column;
   overflow: hidden;
   justify-content: center;
+
   .md-toolbar {
     transform: translateY(-100%);
+
+    .md-title {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .video-title {
+      max-width: 39%;
+    }
+
+    .video-time {
+      margin-left: 10px;
+    }
 
     .md-progress-bar {
       position: absolute;
@@ -256,6 +289,10 @@ export default {
   .md-drawer {
     width: 230px;
     max-width: calc(100vw - 125px);
+
+    .md-list-item .md-icon.volume {
+      margin-right: 16px;
+    }
   }
   .md-content {
     flex: 1;
