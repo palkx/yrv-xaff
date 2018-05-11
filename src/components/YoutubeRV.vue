@@ -1,12 +1,12 @@
 <template>
   <div class="page-container md-layout-column">
-    <md-toolbar class="md-dense md-primary">
+    <md-toolbar :class="{'md-dense': true, 'md-primary': true, 'shoving-settings': showSettings}">
       <md-button
         class="md-icon-button"
-        @click="showNavigation = true">
+        @click="showSettings = true">
         <md-icon>menu</md-icon>
       </md-button>
-      <span class="md-title">Youtube RV</span>
+      <span class="md-title">XaFF RV</span>
       <span
         v-if="nextLoaded"
         :title="`Next: ${ next.video.friendlyName } `"
@@ -28,34 +28,29 @@
         :md-value="current.currentTimePercent"
         :md-buffer="current.bufferedPercent"/>
     </md-toolbar>
-    <md-drawer
-      class=""
-      :md-active.sync="showNavigation">
-      <md-toolbar
-        class="md-transparent"
-        md-elevation="0">
-        <span class="md-title">Settings</span>
-      </md-toolbar>
+    <md-drawer :md-active.sync="showSettings">
       <md-list>
         <md-list-item>
-          <md-icon class="volume">volume_mute</md-icon>
+          <span class="md-title">Settings</span>
+        </md-list-item>
+        <md-list-item>
+          <md-icon
+            class="volume"
+            v-if="userSettings.volume === 0">volume_mute</md-icon>
+          <md-icon
+            class="volume"
+            v-else-if="userSettings.volume <= 75">volume_down</md-icon>
+          <md-icon
+            class="volume"
+            v-else-if="userSettings.volume >= 76">volume_up</md-icon>
           <input
             type="range"
             @change="updateVolume(userSettings.volume)"
             v-model.number="userSettings.volume"> {{ userSettings.volume }}%
         </md-list-item>
-        <!--<md-list-item>
-          <md-icon>send</md-icon>
-          <span class="md-list-item-text">Sent Mail</span>
-        </md-list-item>
         <md-list-item>
-          <md-icon>delete</md-icon>
-          <span class="md-list-item-text">Trash</span>
+          <div>Version: {{ appVer }}</div>
         </md-list-item>
-        <md-list-item>
-          <md-icon>error</md-icon>
-          <span class="md-list-item-text">Spam</span>
-        </md-list-item>-->
       </md-list>
     </md-drawer>
     <md-content>
@@ -84,6 +79,7 @@
 
 <script>
 import settings from '../settings';
+import { version } from '../../package.json';
 
 export default {
   name: 'YoutubeRV',
@@ -105,7 +101,6 @@ export default {
           end: null,
           autoplay: 1,
           cc_load_policy: 0, // eslint-disable-line camelcase
-          color: 'white',
           controls: 0,
           disablekb: 0,
           fs: 0,
@@ -121,12 +116,15 @@ export default {
       userSettings: {},
       customVideo: false,
       nextLoaded: false,
-      showNavigation: false
+      showSettings: false
     };
   },
   computed: {
     id() {
       return this.$route.params.id;
+    },
+    appVer() {
+      return version;
     }
   },
   methods: {
@@ -168,13 +166,11 @@ export default {
     async loadVideo() {
       if (this.customVideo) {
         this.current.videoId = this.id;
-        console.log(this.$route.query.start);
         this.current.videoSettings.start = this.$route.query.start ? Number(this.$route.query.start) : 0;
         this.current.videoSettings.end = this.$route.query.end ? Number(this.$route.query.end) : 0;
         this.current.video.start = this.current.videoSettings.start;
         this.current.video.end = this.current.videoSettings.end;
         this.current.duration = 0;
-        console.log(this.current.videoSettings);
       } else {
         this.current.video = this.next.video;
         this.current.videoId = this.current.video.videoId;
@@ -252,7 +248,7 @@ export default {
 
 <style lang="scss" scoped>
 .page-container:hover .md-toolbar {
-  transform: translateY(0%);
+  transform: translateY(-100%);
 }
 
 .page-container {
@@ -263,7 +259,11 @@ export default {
   justify-content: center;
 
   .md-toolbar {
-    transform: translateY(-100%);
+    transform: translateY(0%);
+
+    &:hover, &.shoving-settings {
+      transform: translateY(0%);
+    }
 
     .md-title {
       text-overflow: ellipsis;
