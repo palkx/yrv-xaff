@@ -148,10 +148,6 @@ export default {
       return true;
     },
     async error() {
-      if (this.customVideo) {
-        this.customVideo = false;
-        this.$router.push('/');
-      }
       await this.loadNext();
     },
     async ended() {
@@ -186,6 +182,7 @@ export default {
         endSeconds: this.current.video.end
       });
       this.$router.replace(`/${this.current.videoId}?start=${this.current.video.start}&end=${this.current.video.end}`);
+      this.current.viewed = false;
       this.nextLoaded = false;
     },
     async preloadVideo() {
@@ -193,15 +190,11 @@ export default {
       this.next.video = video.body;
       this.nextLoaded = true;
     },
-    async videoViewed(_id) {
-      await this.$http.get(`${this.apiEndpoint}/yrvs/id/${_id}/viewed`);
+    async videoViewed(id) {
+      await this.$http.get(`${this.apiEndpoint}/yrvs/vid/${id}/viewed`);
       this.current.viewed = true;
     },
     async loadNext() {
-      if (this.customVideo) {
-        this.customVideo = false;
-        this.$router.push('/');
-      }
       this.current.loadingNext = true;
       if (!this.nextLoaded) {
         await this.preloadVideo();
@@ -229,8 +222,8 @@ export default {
       if ((Math.floor(this.current.currentTimePercent) > 1) && !this.nextLoaded) {
         this.preloadVideo();
       }
-      if ((Math.floor(this.current.currentTimePercent) > 80) && !this.current.viewed && !this.customVideo) {
-        this.videoViewed(this.current.video._id);
+      if ((Math.floor(this.current.currentTimePercent) > 80) && !this.current.viewed) {
+        this.videoViewed(this.current.videoId);
       }
     },
     updateVolume(vol) {
