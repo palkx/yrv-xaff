@@ -18,7 +18,8 @@ export default new Router({
   linkActiveClass: 'open',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
+    { path: '/', name: 'YoutubeRV without video', component: YoutubeRV },
     { path: '/:id', name: 'YoutubeRV with own video', component: YoutubeRV },
-    { path: '*', name: 'YoutubeRV', component: YoutubeRV }
+    { path: '*', redirect: '/' }
   ]
 });
