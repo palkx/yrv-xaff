@@ -171,18 +171,21 @@ export default {
         this.current.video.start = this.current.videoSettings.start;
         this.current.video.end = this.current.videoSettings.end;
         this.current.duration = 0;
+        document.title = `XaFF RV | ${this.current.videoId}`;
       } else {
         this.current.video = this.next.video;
         this.current.videoId = this.current.video.videoId;
         this.current.videoSettings.start = this.current.video.start;
         this.current.videoSettings.end = this.current.video.end;
         this.current.duration = 0;
+        document.title = `XaFF RV | ${this.current.video.friendlyName}`;
       }
       await this.current.player.loadVideoById({
         videoId: this.current.videoId,
         startSeconds: this.current.video.start,
         endSeconds: this.current.video.end
       });
+      this.$router.replace(`/${this.current.videoId}?start=${this.current.video.start}&end=${this.current.video.end}`);
       this.nextLoaded = false;
     },
     async preloadVideo() {
