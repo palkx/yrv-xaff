@@ -23,7 +23,7 @@
         </md-button>
       </div>
       <md-progress-bar
-        class="md-accent"
+        :class="`${ isMouseHovered ? 'md-primary' : 'md-accent' }`"
         md-mode="buffer"
         :md-value="current.currentTimePercent"
         :md-buffer="current.bufferedPercent"/>
@@ -49,11 +49,17 @@
             v-model.number="userSettings.volume"> {{ userSettings.volume }}%
         </md-list-item>
         <md-list-item>
-          <div>Version: {{ appVer }}</div>
+          <a
+            style="text-decoration: none; color: black;"
+            href="https://github.com/iSm1le"
+            target="_blank">Developer</a>
+          <div><span style="font-weight: 700;">Version:</span> {{ appVer }}</div>
         </md-list-item>
       </md-list>
     </md-drawer>
-    <md-content>
+    <md-content
+      @mouseover="isMouseHovered = true"
+      @mouseout="isMouseHovered = false">
       <youtube
         style="
           position: absolute;
@@ -116,7 +122,8 @@ export default {
       userSettings: {},
       customVideo: false,
       nextLoaded: false,
-      showSettings: false
+      showSettings: false,
+      isMouseHovered: false // True if mouse is over "content"
     };
   },
   computed: {
@@ -272,7 +279,7 @@ export default {
     }
 
     .video-time {
-      margin-left: 10px;
+      margin-left: 5px;
     }
 
     .md-progress-bar {
