@@ -30,4 +30,6 @@ npm run build --report
 
 ## Author
 
-Copyright © **[iSm1le](https://github.com/iSm1le/)**, Released under the [Apache 2.0](https://github.com/iSm1le/Naomi-Tanizaki/blob/master/LICENSE) license.  Authored and maintained by [iSm1le](https://github.com/iSm1le)
+Copyright © **[iSm1le](https://github.com/iSm1le/)**, Released under the [Apache 2.0](https://github.com/iSm1le/Naomi-Tanizaki/blob/master/LICENSE) license.
+
+Authored and maintained by [iSm1le](https://github.com/iSm1le)
