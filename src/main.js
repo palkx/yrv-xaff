@@ -1,3 +1,8 @@
+/*
+ * Created on Tue Jul 10 2018
+ * Copyright © 2017-2018 Mikhail K. (iSm1le)
+ * Licensed under the Apache License, Version 2.0
+ */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
@@ -26,4 +31,5 @@ new Vue({
     Preferred quality
     Preferred player settings
     Preferred interface settings
+  Add true random videos from youtube with searching by tag or querry, and category selection (ETA 0.7.0)
 */

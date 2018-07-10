@@ -1,3 +1,8 @@
+<!--
+  // Created on Tue Jul 10 2018
+  // Copyright © 2017-2018 Mikhail K. (iSm1le)
+  // Licensed under the Apache License, Version 2.0
+  -->
 <template>
   <div id="app">
     <router-view/>
