@@ -1,6 +1,6 @@
 # Youtube Random Videos
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/iSm1le/yrv-xaff/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/iSm1le/yrv-xaff.svg)](https://raw.githubusercontent.com/iSm1le/yrv-xaff/master/LICENSE)
 [![Build Status](https://travis-ci.org/iSm1le/yrv-xaff.svg?branch=master)](https://travis-ci.org/iSm1le/yrv-xaff)
 [![dependencies Status](https://david-dm.org/iSm1le/yrv-xaff/status.svg)](https://david-dm.org/iSm1le/yrv-xaff)
 

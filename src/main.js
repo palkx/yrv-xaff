@@ -31,4 +31,5 @@ new Vue({
     Preferred quality
     Preferred player settings
     Preferred interface settings
+  Add true random videos from youtube with searching by tag or querry, and category selection (ETA 0.7.0)
 */
