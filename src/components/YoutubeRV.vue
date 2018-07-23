@@ -21,17 +21,17 @@
         class="md-title video-time">{{ `in ${current.duration - current.currentTime}s` }}</span>
       <div class="md-toolbar-section-end">
         <md-button
+          :disabled="current.loadingNext"
           class="md-icon-button"
-          @click="loadNext()"
-          :disabled="current.loadingNext">
+          @click="loadNext()">
           <md-icon>refresh</md-icon>
         </md-button>
       </div>
       <md-progress-bar
-        :class="`${ isMouseHovered ? 'md-primary' : 'md-accent' }`"
-        md-mode="buffer"
         :md-value="current.currentTimePercent"
-        :md-buffer="current.bufferedPercent"/>
+        :md-buffer="current.bufferedPercent"
+        :class="`${ isMouseHovered ? 'md-primary' : 'md-accent' }`"
+        md-mode="buffer"/>
     </md-toolbar>
     <md-drawer :md-active.sync="showSettings">
       <md-list>
@@ -40,18 +40,18 @@
         </md-list-item>
         <md-list-item>
           <md-icon
-            class="volume"
-            v-if="userSettings.volume === 0">volume_mute</md-icon>
+            v-if="userSettings.volume === 0"
+            class="volume">volume_mute</md-icon>
           <md-icon
-            class="volume"
-            v-else-if="userSettings.volume <= 75">volume_down</md-icon>
+            v-else-if="userSettings.volume <= 75"
+            class="volume">volume_down</md-icon>
           <md-icon
-            class="volume"
-            v-else-if="userSettings.volume >= 76">volume_up</md-icon>
+            v-else-if="userSettings.volume >= 76"
+            class="volume">volume_up</md-icon>
           <input
+            v-model.number="userSettings.volume"
             type="range"
-            @change="updateVolume(userSettings.volume)"
-            v-model.number="userSettings.volume"> {{ userSettings.volume }}%
+            @change="updateVolume(userSettings.volume)"> {{ userSettings.volume }}%
         </md-list-item>
         <md-list-item>
           <a
@@ -66,18 +66,16 @@
       @mouseover="isMouseHovered = true"
       @mouseout="isMouseHovered = false">
       <youtube
-        style="
-          position: absolute;
-          top: 0;
-          min-height: 100%;
-          min-width: 100%;
-          flex: 1;
-          display: flex;
-          justify-content: center;
-          flex-direction: column;
-          "
         ref="youtube"
         :player-vars="current.videoSettings"
+        style="position: absolute;
+              top: 0;
+              min-height: 100%;
+              min-width: 100%;
+              flex: 1;
+              display: flex;
+              justify-content: center;
+              flex-direction: column;"
         @ready="ready()"
         @playing="playing()"
         @paused="paused()"
@@ -137,6 +135,14 @@ export default {
     },
     appVer() {
       return version;
+    }
+  },
+  created() {
+    this.userSettings = settings.getSettings();
+    if (String(this.id).length === 11) {
+      this.customVideo = true;
+    } else {
+      this.preloadVideo();
     }
   },
   methods: {
@@ -241,14 +247,6 @@ export default {
     updateVolume(vol) {
       settings.setVolume(vol);
       this.current.player.setVolume(vol);
-    }
-  },
-  created() {
-    this.userSettings = settings.getSettings();
-    if (String(this.id).length === 11) {
-      this.customVideo = true;
-    } else {
-      this.preloadVideo();
     }
   }
 };
